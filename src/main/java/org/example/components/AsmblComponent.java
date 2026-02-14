@@ -1,5 +1,6 @@
 package org.example.components;
 
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -8,7 +9,10 @@ import net.minestom.server.entity.metadata.display.BlockDisplayMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.tag.Tag;
+import net.minestom.server.utils.time.TimeUnit;
 import org.example.CustomPlayer;
+import org.example.animations.Animation;
+import org.example.animations.GrowingBlockAnimation;
 import org.example.utils.Ray;
 import org.example.utils.Scheme;
 
@@ -111,10 +115,16 @@ public class AsmblComponent {
 
     public void assembly(){
         for (Entity entity : holo){
+            int delay = new Random().nextInt(33);
             Pos relativePos = getRelativePos(entity);
+            Pos targetPos = relativePos.add(placePos);
             BlockDisplayMeta meta = (BlockDisplayMeta) entity.getEntityMeta();
+            Animation animation = GrowingBlockAnimation.getAnim(delay,20,placePos.add(relativePos),placePos.add(relativePos));
             Block block = meta.getBlockStateId();
-            player.getInstance().setBlock(relativePos.add(placePos),block);
+            animation.playAimation(player.getInstance(), block);
+            MinecraftServer.getSchedulerManager().buildTask(() ->{
+                player.getInstance().setBlock(targetPos,block);
+            }).delay(delay+20,TimeUnit.SERVER_TICK).schedule();
         }
         clearHolo();
     }

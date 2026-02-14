@@ -5,11 +5,7 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
-import org.example.components.AsmblComponent;
-import org.example.handlers.AsmblHandler;
-import org.example.handlers.ConnectionHandler;
-import org.example.handlers.SelectHandler;
-import org.example.handlers.SpawnHandler;
+import org.example.handlers.*;
 
 public class Main {
     public static void main(String[] args) {
