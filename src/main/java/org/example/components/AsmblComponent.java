@@ -56,12 +56,11 @@ public class AsmblComponent {
 
             if (!this.scheme.equals(scheme)){
                 clearHolo();
+                this.scheme = scheme;
                 blockPos = createHoloBlocks(player.getInstance(),blockPos,scheme);
             } else{
                 blockPos = teleportHoloBlocks(blockPos);
             }
-
-            this.scheme = scheme;
 
             placePos = blockPos;
         }
