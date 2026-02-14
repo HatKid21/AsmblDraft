@@ -49,7 +49,7 @@ public class AsmblComponent {
             Scheme scheme = player.getSelectComponent().getScheme();
 
             if (!prevScheme.equals(scheme)){
-                clearPrevHolo();
+                clearHolo();
                 createHoloBlocks(player.getInstance(),blockPos,scheme);
             } else{
                 teleportHoloBlocks(blockPos);
@@ -61,10 +61,7 @@ public class AsmblComponent {
 
     private void teleportHoloBlocks(Pos blockPos){
        for (Entity entity : prevHolo){
-           int relativeX = entity.getTag(Tag.Integer("RelativeX"));
-           int relativeY = entity.getTag(Tag.Integer("RelativeY"));
-           int relativeZ = entity.getTag(Tag.Integer("RelativeZ"));
-           Pos relativePos = new Pos(relativeX,relativeY,relativeZ);
+           Pos relativePos = getRelativePos(entity);
            entity.teleport(blockPos.add(relativePos));
        }
     }
@@ -92,11 +89,28 @@ public class AsmblComponent {
     }
 
 
-    private void clearPrevHolo(){
+    public void clearHolo(){
         for (Entity entity : prevHolo){
             entity.remove();
         }
         prevHolo.clear();
+    }
+
+    public void assembly(){
+        for (Entity entity : prevHolo){
+            Pos relativePos = getRelativePos(entity);
+            BlockDisplayMeta meta = (BlockDisplayMeta) entity.getEntityMeta();
+            Block block = meta.getBlockStateId();
+            player.getInstance().setBlock(relativePos.add(prevPos),block);
+        }
+        clearHolo();
+    }
+
+    private Pos getRelativePos(Entity entity){
+       int relativeX = entity.getTag(Tag.Integer("RelativeX"));
+       int relativeY = entity.getTag(Tag.Integer("RelativeY"));
+       int relativeZ = entity.getTag(Tag.Integer("RelativeZ"));
+       return new Pos(relativeX,relativeY,relativeZ);
     }
 
 }
